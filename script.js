@@ -9,8 +9,6 @@ let array = ['','','',
              '','','',
              '','','']
 
-
-
 function inactive () {
     blocks.forEach(block => {
         block.removeEventListener('click', handleClick);
@@ -22,6 +20,7 @@ function restart (){
 array =['','','',
         '','','',
         '','','']
+
 blocks.forEach(block => {
     block.addEventListener('click', handleClick, {once:true});
     block.innerText=''
@@ -39,6 +38,15 @@ function changeTurn() {
     }
 }
 
+function tieCheck(){
+    let total = 0
+    for (let i = 0; i<array.length;i++){
+        total += Math.abs(array[i])
+    } 
+    if (total === 9){
+      return true
+}
+}
 
 function stateCheck () {
     //need to get a flat array of the current results
@@ -88,6 +96,11 @@ function handleClick (e) {
     if (winCheck()){
         endgame.classList.remove("hide")
         endgametext.innerText = `GAME OVER! ${playTurn} WINS!`
+        inactive();
+    }
+    if (tieCheck()){
+        endgame.classList.remove("hide")
+        endgametext.innerText = `GAME OVER! It's a Draw!`
         inactive();
     }
     changeTurn()
