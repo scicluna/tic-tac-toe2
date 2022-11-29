@@ -6,8 +6,8 @@ const endgametext = document.getElementById('gameendtext')
 const resetbutton = document.getElementById('reset')
 
 //Setting some important variables
-let ai = 'off'
-let pvp = 'on'
+let ai = 'easy'
+let pvp = 'off'
 let gamestate = 'active'
 let playTurn = 'X'
 let array = 
@@ -109,6 +109,7 @@ function handleClick (e) {
     const block = e.target
     block.innerText = `${playTurn}`
     stateCheck();
+    console.log(playTurn)
     if (winCheck()){
         endgame.classList.remove("hide")
         endgametext.innerText = `GAME OVER! ${playTurn} WINS!`
@@ -124,7 +125,7 @@ function handleClick (e) {
     changeTurn()
     }
 
-    if (ai === 'easy'){
+    if (ai === 'easy' && gamestate === 'active'){
         console.log('easy move')
         aiEasy()
     }
