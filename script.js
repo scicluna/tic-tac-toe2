@@ -6,8 +6,8 @@ const endgametext = document.getElementById('gameendtext')
 const resetbutton = document.getElementById('reset')
 
 //Setting some important variables
-let ai = 'easy'
-let pvp = 'off'
+let ai = 'off'
+let pvp = 'on'
 let gamestate = 'active'
 let playTurn = 'X'
 let array = 
