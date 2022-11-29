@@ -6,11 +6,14 @@ const endgametext = document.getElementById('gameendtext')
 const resetbutton = document.getElementById('reset')
 
 //Setting some important variables
+let ai = 'easy'
+let pvp = 'off'
 let gamestate = 'active'
 let playTurn = 'X'
-let array = ['','','',
-             '','','',
-             '','','']
+let array = 
+['','','',
+'','','',
+'','','']
 
 //inactivates the game and makes it non-interactable.
 function inactive () {
@@ -53,7 +56,7 @@ function tieCheck(){
     } 
     if (total === 9){
       return true
-}
+    }
 }
 
 //updates the current array depending on the inner-text of the blocks
@@ -117,6 +120,46 @@ function handleClick (e) {
         inactive();
     }
 
+    if (pvp === 'on'){
     changeTurn()
+    }
+
+    if (ai === 'easy'){
+        console.log('easy move')
+        aiEasy()
+    }
 }
 
+//We make a new start screen asking to play locally vs ai. pvp, we run normally. vs ai we gate off changeturn//
+//After our normal change turn, we make it so if ai is on, that it takes AI turn ->then it statechecks like normal and passes the turn if not won//
+//Must make an "AIturn" function//
+
+//Easy AI makes legal moves at random
+function aiEasy(){
+    let moveChoices = []
+    changeTurn()
+    for (let i=0;i<array.length;i++){
+        if (array[i] === ''){
+            moveChoices.push(i)
+        }
+    }
+
+    if(moveChoices !== []){
+    let randomPick = Math.floor(Math.random()*moveChoices.length)
+    blocks[moveChoices[randomPick]].innerText = `${playTurn}`
+
+    stateCheck()
+    if (winCheck()){
+        endgame.classList.remove("hide")
+        endgametext.innerText = `GAME OVER! ${playTurn} WINS!`
+        inactive();
+    }
+    if (tieCheck() && gamestate === 'active'){
+        endgame.classList.remove("hide")
+        endgametext.innerText = `GAME OVER! It's a Draw!`
+        inactive();
+    }
+
+    changeTurn()
+    }
+}
