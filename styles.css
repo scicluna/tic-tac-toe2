@@ -1,3 +1,4 @@
+/*Initial setup for the page*/
 *{
     padding: 0;
     margin: 0;
@@ -6,6 +7,7 @@
     color:white;
 }
 
+/*set the main container to take up the whole screen and set the background to black. also centered its children*/
 main {
     width: 100vw;
     height: 100vh;
@@ -15,6 +17,7 @@ main {
     align-items: center;
 }
 
+/*sets up our grid -- essential for tic-tac-toe*/
 .game {
     display:grid;
     grid-template-columns: repeat(3, 200px);
@@ -25,6 +28,7 @@ main {
     gap: 10px;
 }
 
+/*set up each block to center their contents and made black to give off a cool grid effect*/
 .block {
     background-color: black;
     font-size: 150px;
@@ -32,16 +36,20 @@ main {
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    transition: ease 500ms;
 }
 
+/*small glow when you hover over a block*/
 .block:hover{
     background-color: rgb(37, 37, 37);
 }
 
+/*keeps our endscreen hidden until we need it */
 .hide {
     display: none;
 }
 
+/*causes our gameover screen to shroud the board in opaque green*/
 .gameover{
     position:absolute;
     width: 100vw;
@@ -49,6 +57,7 @@ main {
     background-color: rgba(127, 255, 212, 0.356);
 }
 
+/*formats our gameover text to be centered*/
 .gameendbody{
     display:flex;
     flex-direction: column;
@@ -58,18 +67,22 @@ main {
     height:100vh;
 }
 
+/*changes our font for the game end message*/
 .gameendtext{
     font-size:50px;
 }
 
+/*makes our game over button look nice*/
 .gameover button 
 {  
     color:black;
     width: auto;
     font-size: 50px;
     border-radius: 8px;
+    cursor: pointer;
 }
 
+/*for the maingame when the gameover screen is up*/
 .fade {
     opacity: 15%;
 }

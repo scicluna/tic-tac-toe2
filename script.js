@@ -1,35 +1,42 @@
+//Declare my DOMS
 const game = document.getElementById('game')
 const blocks = document.querySelectorAll('[data-block]')
 const endgame = document.getElementById('gameend')
 const endgametext = document.getElementById('gameendtext')
 const resetbutton = document.getElementById('reset')
 
+//Setting some important variables
+let gamestate = 'active'
 let playTurn = 'X'
 let array = ['','','',
              '','','',
              '','','']
 
+//inactivates the game and makes it non-interactable.
 function inactive () {
     blocks.forEach(block => {
         block.removeEventListener('click', handleClick);
     })
     game.classList.add('fade')
+    gamestate = 'inactive'
 }
 
+//restarts the game from its inactive state
 function restart (){
 array =['','','',
         '','','',
         '','','']
-
 blocks.forEach(block => {
     block.addEventListener('click', handleClick, {once:true});
     block.innerText=''
-
-}
-)
+})
+gamestate = 'active'
+playTurn = 'X'
 endgame.classList.add('hide')
-game.classList.remove('fade')}
+game.classList.remove('fade')
+}
 
+//changes the turn from X to O
 function changeTurn() {
     if (playTurn == 'X'){
         playTurn = 'O'
@@ -38,6 +45,7 @@ function changeTurn() {
     }
 }
 
+//checks for ties (if the array = 9, then its full)
 function tieCheck(){
     let total = 0
     for (let i = 0; i<array.length;i++){
@@ -48,8 +56,8 @@ function tieCheck(){
 }
 }
 
+//updates the current array depending on the inner-text of the blocks
 function stateCheck () {
-    //need to get a flat array of the current results
     for (let i=0;i<blocks.length;i++){
         if (blocks[i].innerText == 'X'){
             array[i] = 1
@@ -62,6 +70,7 @@ function stateCheck () {
     }
 }
 
+//checks for a win
 function winCheck () {
     //COLUMN
     console.log(array)
@@ -84,11 +93,15 @@ function winCheck () {
         }
 }
 
+//logic for the reset button
 resetbutton.addEventListener('click', restart)
+
+//initial logic for our blocks and adds a "click" eventlistener for each of them
 blocks.forEach(block => {
     block.addEventListener('click', handleClick, {once:true});
 })
 
+//logic for clicking on each block and placing X's and O's -> also calls upon our other functions
 function handleClick (e) {
     const block = e.target
     block.innerText = `${playTurn}`
@@ -98,11 +111,12 @@ function handleClick (e) {
         endgametext.innerText = `GAME OVER! ${playTurn} WINS!`
         inactive();
     }
-    if (tieCheck()){
+    if (tieCheck() && gamestate === 'active'){
         endgame.classList.remove("hide")
         endgametext.innerText = `GAME OVER! It's a Draw!`
         inactive();
     }
+
     changeTurn()
 }
 
