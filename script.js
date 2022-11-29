@@ -94,7 +94,7 @@ function winCheck () {
         if((Math.abs(array[2]+array[4]+array[6])) === 3 && array[2] === array[4] && array[4] === array[6]){
             return true
         }
-}
+} 
 
 //logic for the reset button
 resetbutton.addEventListener('click', restart)
@@ -148,6 +148,7 @@ function aiEasy(){
     if(moveChoices !== []){
     let randomPick = Math.floor(Math.random()*moveChoices.length)
     blocks[moveChoices[randomPick]].innerText = `${playTurn}`
+    blocks[moveChoices[randomPick]].removeEventListener('click',handleClick)
 
     stateCheck()
     if (winCheck()){
