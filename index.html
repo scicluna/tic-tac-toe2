@@ -9,11 +9,21 @@
     <script src ="script.js" defer></script>
 </head>
 
-
-
 <body>
+    <div id="start" class = "start">
+        <h1>TIC TAC TOE</h1>
+        <div>
+            <button id="pvp" data-difficulty>PVP</button>
+            <button id="easy" data-difficulty>Easy</button>
+            <button id="impossible" data-difficulty>Impossible</button>
+        </div>
+        <p>By John Lucas Scicluna</p>
+    </div>
+
+
+
     <main>
-        <div id = "game" class ="game">
+        <div id = "game" class ="game hide">
             <div class ="block" data-block></div>
             <div class ="block" data-block></div>
             <div class ="block" data-block></div>
@@ -28,6 +38,7 @@
             <div class ="gameendbody">
                 <p id="gameendtext" class = "gameendtext">PLACEHOLDER TEXT</p>
                 <button id ="reset">Restart?</button>
+                <button id ="title">Back to Title</button>
             </div>
         </div>
     </main>

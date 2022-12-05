@@ -4,18 +4,23 @@ const blocks = document.querySelectorAll('[data-block]')
 const endgame = document.getElementById('gameend')
 const endgametext = document.getElementById('gameendtext')
 const resetbutton = document.getElementById('reset')
+const titlebutton = document.getElementById('title')
+const difficulty = document.querySelectorAll('[data-difficulty]')
+const startscreen = document.getElementById('start')
 
 //Setting some important variables
-let ai = 'medium'
-let pvp = 'off'
+let ai;
 let gamestate = 'active'
 let playTurn = 'X'
+let playerLetter = 1
+let aiLetter = -1
+
 array =[0,0,0,
         0,0,0,
         0,0,0]
         valuenetwork = [2,1,2,
-            1,3,1,
-            2,1,2]
+                        1,3,1,
+                        2,1,2]
 //inactivates the game and makes it non-interactable.
 function inactive () {
     blocks.forEach(block => {
@@ -41,6 +46,13 @@ gamestate = 'active'
 playTurn = 'X'
 endgame.classList.add('hide')
 game.classList.remove('fade')
+}
+
+function backToTitle () {
+game.classList.add('hide')
+game.classList.remove('fade')
+endgame.classList.add('hide')
+startscreen.classList.remove('hide')
 }
 
 //changes the turn from X to O
@@ -104,42 +116,75 @@ function winCheck () {
 function almostWin () {
     for (let i = 0; i<3; i++){
         if (((Math.abs(array[i] + array[i+3] + array[i+6])) === 2) && (array[i] === array[i+3] || array[i+3] === array[i+6] || array[i] === array[i+6])){
+            if (array[i] === aiLetter || array[i+3] === aiLetter){
+            valuenetwork[i] = '11'
+            valuenetwork[i+3] = '11'
+            valuenetwork [i+6] = '11'
+            console.log('almost a column!') 
+            } else {
             valuenetwork[i] = '10'
             valuenetwork[i+3] = '10'
             valuenetwork [i+6] = '10'
             console.log('almost a column!')
-        }}
+            }
+        }
+    }
     //ROWS
     for (let i = 0; i<9; i+=3){
         if (((Math.abs(array[i] + array[i+1] + array[i+2])) === 2) && (array[i] === array[i+1] || array[i+1] === array[i+2] || array[i] === array[i+2])){
+            if (array[i] === aiLetter || array[i+1] === aiLetter){
+            valuenetwork[i] = '11'
+            valuenetwork[i+1] = '11'
+            valuenetwork[i+2] = '11'
+            console.log('almost a row!')
+            } else {
             valuenetwork[i] = '10'
             valuenetwork[i+1] = '10'
             valuenetwork[i+2] = '10'
             console.log('almost a row!')
+            }
         }
     }
     //DIAGS
         if(((Math.abs(array[0]+array[4]+array[8])) === 2) && (array[0] === array[4] || array[4] === array[8] || array[0] === array[8])){
+            if (array[0] === aiLetter || array[4] === aiLetter){
+            valuenetwork[0] = '11'
+            valuenetwork[4] = '11'
+            valuenetwork[8] = '11'
+            console.log('almost a diag!')
+            } else {
             valuenetwork[0] = '10'
             valuenetwork[4] = '10'
             valuenetwork[8] = '10'
             console.log('almost a diag!')
+            }
         } 
         if((parseInt((Math.abs(array[2]+array[4]+array[6]))) === 2) && (array[2] === array[4] || array[4] === array[6] || array[2] === array[6])){
+            if (array[2] === aiLetter || array[4] === aiLetter){
+            valuenetwork[2] = '11'
+            valuenetwork[4] = '11'
+            valuenetwork[6] = '11'
+            console.log('almost a diag!')  
+            } else {
             valuenetwork[2] = '10'
             valuenetwork[4] = '10'
             valuenetwork[6] = '10'
             console.log('almost a diag!')
+            }
         }
-        console.log(valuenetwork)
 } 
 
 //logic for the reset button
 resetbutton.addEventListener('click', restart)
+titlebutton.addEventListener('click', backToTitle)
 
 //initial logic for our blocks and adds a "click" eventlistener for each of them
 blocks.forEach(block => {
     block.addEventListener('click', handleClick, {once:true});
+})
+
+difficulty.forEach(mode => {
+    mode.addEventListener('click', startGame)
 })
 
 //logic for clicking on each block and placing X's and O's -> also calls upon our other functions
@@ -147,8 +192,6 @@ function handleClick (e) {
     const block = e.target
     block.innerText = `${playTurn}`
     stateCheck();
-    almostWin();
-    console.log(valuenetwork)
     if (winCheck()){
         endgame.classList.remove("hide")
         endgametext.innerText = `GAME OVER! ${playTurn} WINS!`
@@ -159,20 +202,26 @@ function handleClick (e) {
         endgametext.innerText = `GAME OVER! It's a Draw!`
         inactive();
     }
-
-    if (pvp === 'on'){
-    changeTurn()
+    if (ai === 'pvp' && gamestate === 'active'){
+        changeTurn()
     }
-
     if (ai === 'easy' && gamestate === 'active'){
         console.log('easy move')
         aiEasy()
     }
-
-    if (ai === 'medium' && gamestate === 'active'){
-        console.log('medium move')
-        aiMedium()
+    if (ai === 'impossible' && gamestate === 'active'){
+        console.log('optimal move')
+        aiImpossible()
     }
+}
+
+function startGame (e) {
+    const button = e.target
+    ai = button.innerText.toLowerCase()
+    startscreen.classList.add("hide")
+    game.classList.remove("hide")
+    restart()
+    console.log(ai)
 }
 
 
@@ -212,16 +261,11 @@ function aiEasy(){
     }
 }
 
-//array =   ['','','',
-//           '','','',
-//           '','','']
-
-function aiMedium(){
+function aiImpossible(){
     //Deciding its move at random from empty spaces
     let moveChoices = []
-    console.log(Math.max(...valuenetwork))
-    almostWin()
     changeTurn()
+    almostWin()
     //I want it to pick the moves with the maximum of valuenetwork
     for (let i=0;i<array.length;i++){
         if (array[i] === 0 && valuenetwork[i] == (Math.max(...valuenetwork))){
